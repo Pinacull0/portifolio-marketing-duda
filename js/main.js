@@ -65,44 +65,23 @@
   ME.onRefresh(() => lineEls.forEach(ME.lineIndex));
 
   /* =========================================================
-     NAV · MENU · HUD · PROGRESSO
+     NAV · HUD · PROGRESSO
      ========================================================= */
   const nav = () => {
     const bar = $('.nav');
-    const html = document.documentElement;
-    const burger = $('.nav__burger');
-    const menu = $('.menu');
-
-    const closeMenu = () => {
-      if (!html.classList.contains('menu-open')) return;
-      html.classList.remove('menu-open');
-      burger.setAttribute('aria-expanded', 'false');
-      menu.setAttribute('aria-hidden', 'true');
-      ME.scroll.unlock();
-    };
-    burger.addEventListener('click', () => {
-      const open = !html.classList.contains('menu-open');
-      html.classList.toggle('menu-open', open);
-      burger.setAttribute('aria-expanded', String(open));
-      menu.setAttribute('aria-hidden', String(!open));
-      open ? ME.scroll.lock() : ME.scroll.unlock();
-    });
-
     $$('[data-scrollto]').forEach((a) =>
       a.addEventListener('click', (e) => {
         const href = a.getAttribute('href');
         if (!href || href[0] !== '#') return;
         e.preventDefault();
-        const wasOpen = html.classList.contains('menu-open');
-        closeMenu();
-        setTimeout(() => ME.scroll.scrollTo(href), wasOpen ? 450 : 0);
+        ME.scroll.scrollTo(href);
       })
     );
 
     ME.ticker.add(() => {
       const y = ME.scroll.y;
       bar.classList.toggle('is-scrolled', y > 40);
-      const hide = y > innerHeight * 0.7 && ME.scroll.direction > 0 && !html.classList.contains('menu-open');
+      const hide = y > innerHeight * 0.7 && ME.scroll.direction > 0;
       bar.classList.toggle('is-hidden', hide);
     }, 30);
 
